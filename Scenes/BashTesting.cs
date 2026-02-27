@@ -21,7 +21,7 @@ public partial class BashTesting : CanvasLayer
 	{
 
 		Godot.Collections.Array output = new Godot.Collections.Array();
-        OS.Execute("C:\\Program Files\\Git\\bin\\bash.exe", new string[] {"-c", "res://Resources/BashScripts/TestBash.sh"}, output);
+        OS.Execute("C:\\Program Files\\Git\\bin\\bash.exe", new string[] {ProjectSettings.GlobalizePath("res://Resources/BashScripts/TestBash.sh")}, output, true);
 		GD.Print(output);
 
     }
