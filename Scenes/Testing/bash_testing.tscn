@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://coyv3pgb6tsvb"]
 
-[ext_resource type="Script" uid="uid://tsm7squyduew" path="res://Scenes/BashTesting.cs" id="1_67t3e"]
+[ext_resource type="Script" uid="uid://tsm7squyduew" path="res://Scenes/Testing/BashTesting.cs" id="1_67t3e"]
 
 [sub_resource type="Theme" id="Theme_82kcm"]
 HBoxContainer/constants/separation = 100
