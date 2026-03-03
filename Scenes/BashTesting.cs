@@ -4,11 +4,20 @@ using System;
 public partial class BashTesting : CanvasLayer
 {
 
+	GodotThread BashThread;
+	Semaphore BashSema;
+	Mutex BashMutex;
 
+	bool exitThread = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		BashThread = new GodotThread();
+		BashSema = new Semaphore();
+		BashMutex = new Mutex();
+
+		BashThread.Start(Callable.From(ThreadRunBash));
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -16,13 +25,50 @@ public partial class BashTesting : CanvasLayer
 	{
 	}
 
+    public override void _ExitTree()
+    {
+        base._ExitTree();
 
-	public void RunTestBash()
+		//break loop
+		BashMutex.Lock();
+		exitThread = true;
+		BashMutex.Unlock();
+
+		//unblock thread
+		BashSema.Post();
+
+		//wait for thread
+		BashThread.WaitToFinish();
+
+
+
+    }
+
+
+    public void RunTestBash()
 	{
+		BashSema.Post();
 
-		Godot.Collections.Array output = new Godot.Collections.Array();
-        OS.Execute("C:\\Program Files\\Git\\bin\\bash.exe", new string[] {ProjectSettings.GlobalizePath("res://Resources/BashScripts/TestBash.sh")}, output, true);
-		GD.Print(output);
+    }
 
+	public void ThreadRunBash()
+	{
+        while (true)
+        {
+            BashSema.Wait();
+
+			BashMutex.Lock();
+			bool leave = exitThread;
+			BashMutex.Unlock();
+
+			if(leave)
+			{
+				break;
+			}
+
+            Godot.Collections.Array output = new Godot.Collections.Array();
+            OS.Execute("C:\\Program Files\\Git\\bin\\bash.exe", new string[] { ProjectSettings.GlobalizePath("res://Resources/BashScripts/TestBash.sh") }, output, true);
+            GD.Print(output);
+        }
     }
 }
