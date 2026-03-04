@@ -13,6 +13,8 @@ public partial class SabreRunner : Node
 
 	[Signal] public delegate void SabreCompletedEventHandler();
 
+	[Export] private string _sabreFilePath;
+
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -21,7 +23,7 @@ public partial class SabreRunner : Node
         BashSema = new Semaphore();
         BashMutex = new Mutex();
 
-        //BashThread.Start(Callable.From());
+        BashThread.Start(Callable.From(PollSabre));
 
     }
 
@@ -52,6 +54,11 @@ public partial class SabreRunner : Node
 	}
 
 
+	public void RunSabre()
+	{
+		BashSema.Post();
+	}
+
 	public void PollSabre()
 	{
 		//keep looping until we are told to break with exitThread
@@ -70,12 +77,18 @@ public partial class SabreRunner : Node
 			}
 
 			//now do our processing
+			BashMutex.Lock();
+			string sabrePath = _sabreFilePath;
+			BashMutex.Unlock();
+            Godot.Collections.Array output = new Godot.Collections.Array();
+			GD.Print($"[SR] Running Sabre file at {sabrePath}");
+            OS.Execute("C:\\Program Files\\Git\\bin\\bash.exe", new string[] { ProjectSettings.GlobalizePath("res://Resources/BashScripts/BashSabre.sh"), $"{sabrePath}" }, output, true);
+
+			GD.Print($"[SR] Sabre Finished Processing, output was:\n{output}");
 
 
-
-
-			//once processing is done, let the main thread know that we are done with a deferred signal call (deferred to resync with main thread. I think.)
-			CallDeferred("emit_signal", "SabreCompleted");
+            //once processing is done, let the main thread know that we are done with a deferred signal call (deferred to resync with main thread. I think.)
+            CallDeferred("emit_signal", "SabreCompleted");
 			
 		}
 	}

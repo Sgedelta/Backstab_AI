@@ -1,0 +1,84 @@
+/** Backstab, a domain of an automated social deduction game by Sam Easton and Conrad Chaffee.
+* backstab_authored is the testing, authored version which is read only for the game. Modifying this will modify how the game sets itself up and behaves. Parts of this file (namely, the initial state) will be overwritten
+* for backstab_generated, the version that is run during the course of the regular game. 
+*
+* 
+*/
+
+
+//SETUP
+type location;
+type character : location; //character is built in but we give it more parents here - namely a location so if we want to add items people can have them (item at location)
+type survivor : character;
+type traitor : character;
+type place : location;
+type task : location;
+
+property alive(character : character) : boolean;
+property at (character : character) : place;
+property suspect(character : character) : boolean;
+property completed(doer : character, task : task) : boolean;
+property path(from : place, to : place) : boolean;
+
+entity Sur1 : survivor;
+entity Sur2 : survivor;
+entity Sur3 : survivor;
+entity Sur4 : survivor;
+entity Sur5 : survivor;
+entity Sur6 : survivor;
+entity Sur7 : survivor;
+entity Tra1 : traitor;
+
+entity Room1 : place;
+entity Room2 : place;
+entity Room3 : place;
+
+//INITIAL INFORMATION
+
+alive(Sur1);
+at(Sur1) = Room1;
+path(Room1, Room3);
+path(Room2, Room3);
+
+
+
+
+//END INITIAL INFORMATION
+//ACTIONS
+action travel(character : character, from : place, to : place) {
+ precondition:
+  from != to &
+  (path(from, to) | path(to, from)) &
+  alive(character) &
+  at(character) == from;
+ effect:
+  at(character) = to;
+ consenting: character;
+ observing(c : character): alive(c) & (at(c) == from | at(c) == to);
+
+};
+
+//TRIGGERS
+trigger see_at(character : character, other : character, place : place) {
+ precondition:
+  at(character) == place &
+  at(other) == place &
+  believes(character, at(other) != place);
+ effect:
+  believes(character, at(other) = place);
+};
+
+
+//UTILITY FUNCTIONS
+//Author 
+utility(): 
+ at(Sur1) == Room2;
+
+utility(Sur1): 
+ if(!alive(Sur1)) 
+  0
+ elseif(at(Sur1) == Room2)
+  1
+ else
+  0
+
