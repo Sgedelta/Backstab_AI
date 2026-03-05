@@ -16,9 +16,15 @@ public partial class SabreRunner : Node
 	[Export] private string _sabreFilePath;
 
 
+	private Godot.Collections.Array<Godot.Collections.Array<string>> _sabreParsedOutput;
+	public Godot.Collections.Array<Godot.Collections.Array<string>> SabreParsedOutput { get { return _sabreParsedOutput; } }
+
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_sabreParsedOutput = new Godot.Collections.Array<Godot.Collections.Array<string>>();
+
         BashThread = new GodotThread();
         BashSema = new Semaphore();
         BashMutex = new Mutex();
@@ -80,11 +86,24 @@ public partial class SabreRunner : Node
 			BashMutex.Lock();
 			string sabrePath = _sabreFilePath;
 			BashMutex.Unlock();
+
             Godot.Collections.Array output = new Godot.Collections.Array();
+
 			GD.Print($"[SR] Running Sabre file at {sabrePath}");
             OS.Execute("C:\\Program Files\\Git\\bin\\bash.exe", new string[] { ProjectSettings.GlobalizePath("res://Resources/BashScripts/BashSabre.sh"), $"{sabrePath}" }, output, true);
+			GD.Print($"[SR] Sabre Finished Processing, output was:\n   {output}");
 
-			GD.Print($"[SR] Sabre Finished Processing, output was:\n{output}");
+			BashMutex.Lock();
+			//clear out old output
+			_sabreParsedOutput.Clear();
+
+			//split output into usable chunks
+			string data = ((string)output[0]);
+			data = data.Substring(0, data.Length - 2); //trim \r\n
+			string[] dataArr = data.Split(')');
+
+
+			BashMutex.Unlock();
 
 
             //once processing is done, let the main thread know that we are done with a deferred signal call (deferred to resync with main thread. I think.)

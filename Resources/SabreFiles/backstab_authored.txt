@@ -15,7 +15,7 @@ type place : location;
 type task : location;
 
 property alive(character : character) : boolean;
-property at (character : character) : place;
+property at(character : character) : place;
 property suspect(character : character) : boolean;
 property completed(doer : character, task : task) : boolean;
 property path(from : place, to : place) : boolean;
@@ -81,4 +81,3 @@ utility(Sur1):
   1
  else
   0
-
