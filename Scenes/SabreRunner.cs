@@ -99,8 +99,31 @@ public partial class SabreRunner : Node
 
 			//split output into usable chunks
 			string data = ((string)output[0]);
+			data = data.Replace(",", "");
 			data = data.Substring(0, data.Length - 2); //trim \r\n
 			string[] dataArr = data.Split(')');
+			int i = 0; 
+			foreach (string s in dataArr)
+			{
+				//if this is empty, skip it (can happen at end of output)
+				if(s.Length <= 0)
+				{
+					continue;
+				}
+				
+				//add a new subarray
+				_sabreParsedOutput.Add(new Godot.Collections.Array<string>());
+
+				//split into componenet parts 
+				GD.Print("[SR} splitting:" + s);
+				string[] commandArr = s.Trim().Split(new char[] { ' ', '(' });
+				foreach(string sub in commandArr)
+				{
+					GD.Print("[SR]   >" + sub);
+					_sabreParsedOutput[i].Add(sub);
+				}
+				i += 1;
+			}
 
 
 			BashMutex.Unlock();
