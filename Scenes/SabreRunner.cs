@@ -17,13 +17,17 @@ public partial class SabreRunner : Node
 
 
 	private Godot.Collections.Array<Godot.Collections.Array<string>> _sabreParsedOutput;
-	public Godot.Collections.Array<Godot.Collections.Array<string>> SabreParsedOutput { get { return _sabreParsedOutput; } }
+	private Godot.Collections.Array<Godot.Collections.Array<string>> _safeSabreOutput; //a version of sabre output that is only touched on the main thread. should be safe to access no matter what, even though it is referenced in a mutex...
+	public Godot.Collections.Array<Godot.Collections.Array<string>> SabreParsedOutput { get { return _safeSabreOutput; } }
 
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_sabreParsedOutput = new Godot.Collections.Array<Godot.Collections.Array<string>>();
+        _safeSabreOutput   = new Godot.Collections.Array<Godot.Collections.Array<string>>();
+
+		SabreCompleted += () => MakeParsedOutputSafe();
 
         BashThread = new GodotThread();
         BashSema = new Semaphore();
@@ -44,6 +48,25 @@ public partial class SabreRunner : Node
 		//we have to safely close the thread before we exit the tree
 		ExitThread();
     }
+
+	//Helper to make a "safe" version of sabre output that I *believe* we don't have to use a mutex to mess with, because it's only ever used on main thread.
+	private void MakeParsedOutputSafe()
+	{
+        _safeSabreOutput.Clear();
+
+        BashMutex.Lock();
+
+		for (int i = 0; i < _sabreParsedOutput.Count; i++)
+		{
+			_safeSabreOutput.Add(new Godot.Collections.Array<string>());
+			for(int j = 0; j < _sabreParsedOutput[i].Count; j++)
+			{
+				_safeSabreOutput[i].Add(_sabreParsedOutput[i][j]);
+			}
+		}
+
+		BashMutex.Unlock();
+	}
 
 	/// <summary>
 	/// Frees the running thread - MIGHT cause blocking, but is needed to exit safely

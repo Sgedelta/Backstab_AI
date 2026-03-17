@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dnjg8s4bwfx42"]
+
+[ext_resource type="Script" uid="uid://c4a60400gqson" path="res://Scenes/ButtonLinker.cs" id="1_fn3ib"]
+[ext_resource type="Script" uid="uid://dt28scsf86nwo" path="res://Scenes/SabreRunner.cs" id="1_i7xhf"]
+
+[node name="CommandsTesting" type="Node2D" unique_id=1485605991]
+script = ExtResource("1_fn3ib")
+
+[node name="Node2D" type="Node2D" parent="." unique_id=359846546]
+script = ExtResource("1_i7xhf")
+
+[node name="Button" type="Button" parent="." unique_id=869261606]
+offset_right = 3856.0
+offset_bottom = 630.0
+theme_override_font_sizes/font_size = 200
+text = "Run Test"
+
+[connection signal="pressed" from="Button" to="." method="MakeGMRunCommands" binds= [NodePath("Node2D")]]
