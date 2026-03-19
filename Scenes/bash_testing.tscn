@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://6nu5p48rlnpv"]
+
+[ext_resource type="Script" uid="uid://dt28scsf86nwo" path="res://Scenes/SabreRunner.cs" id="1_67t3e"]
+
+[sub_resource type="Theme" id="Theme_82kcm"]
+HBoxContainer/constants/separation = 100
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=1749190153]
+script = ExtResource("1_67t3e")
+_sabreFilePath = "Resources/SabreFiles/backstab_authored.txt"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1565820295]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=8085381]
+custom_minimum_size = Vector2(0, 720)
+layout_mode = 2
+size_flags_vertical = 2
+theme = SubResource("Theme_82kcm")
+theme_override_constants/separation = 800
+
+[node name="Run Bash" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1575939189]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 100
+text = "Run Bash
+"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=604715355]
+custom_minimum_size = Vector2(0, 720)
+layout_mode = 2
+size_flags_vertical = 10
+theme = SubResource("Theme_82kcm")
+theme_override_constants/separation = 800
+
+[node name="Test Bash" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1591752573]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 100
+text = "Test Bash
+"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=1359824356]
+custom_minimum_size = Vector2(0, 720)
+layout_mode = 2
+size_flags_vertical = 10
+theme = SubResource("Theme_82kcm")
+theme_override_constants/separation = 800
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=598168967]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 100
+text = "This is test code that has not run"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Run Bash" to="." method="RunSabre"]
