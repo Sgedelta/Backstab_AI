@@ -19,6 +19,7 @@ property at(character : character) : place;
 property suspect(character : character) : boolean;
 property completed(doer : character, task : task) : boolean;
 property path(from : place, to : place) : boolean;
+property bad(character : character) : boolean;
 
 entity Sur1 : survivor;
 entity Sur2 : survivor;
@@ -32,13 +33,21 @@ entity Tra1 : traitor;
 entity Room1 : place;
 entity Room2 : place;
 entity Room3 : place;
+entity Room4 : place;
 
 //INITIAL INFORMATION
 
 alive(Sur1);
+alive(Tra1);
+alive(Sur2);
+at(Tra1) = Room4;
 at(Sur1) = Room1;
+at(Sur2) = Room3;
 path(Room1, Room3);
 path(Room2, Room3);
+path(Room4, Room2);
+believes(Tra1, at(Sur1) = Room1);
+believes(Sur1, !alive(Sur2));
 
 
 
@@ -58,6 +67,18 @@ action travel(character : character, from : place, to : place) {
 
 };
 
+action kill(traitor : traitor, survivor : survivor, place : place) {
+  precondition:
+    at(traitor) == place &
+    at(survivor) == place &
+    alive(traitor) & alive(survivor);
+  effect:
+    !alive(survivor) &
+    bad(traitor);
+  consenting: traitor;
+  observing(c : character): alive(c) & at(c) == place;
+};
+
 //TRIGGERS
 trigger see_at(character : character, other : character, place : place) {
  precondition:
@@ -68,11 +89,20 @@ trigger see_at(character : character, other : character, place : place) {
   believes(character, at(other) = place);
 };
 
+//trigger see_alive(character : character, other : character, place : place) {
+//  precondition:
+//    at(character) == place &
+//    at(other) == place &
+//    believes(character, !alive(other));
+//  effect:
+//    believes(character, alive(other));
+//};
+
 
 //UTILITY FUNCTIONS
 //Author 
 utility(): 
- at(Sur1) == Room2;
+ at(Sur1) == Room2 & !alive(Sur1);
 
 utility(Sur1): 
  if(!alive(Sur1)) 
@@ -80,4 +110,7 @@ utility(Sur1):
  elseif(at(Sur1) == Room2)
   1
  else
-  0
+  0;
+
+utility(Tra1):
+  !alive(Sur1);

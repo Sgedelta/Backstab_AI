@@ -138,7 +138,7 @@ public partial class SabreRunner : Node
 				_sabreParsedOutput.Add(new Godot.Collections.Array<string>());
 
 				//split into componenet parts 
-				GD.Print("[SR} splitting:" + s);
+				GD.Print("[SR] splitting:" + s);
 				string[] commandArr = s.Trim().Split(new char[] { ' ', '(' });
 				foreach(string sub in commandArr)
 				{
