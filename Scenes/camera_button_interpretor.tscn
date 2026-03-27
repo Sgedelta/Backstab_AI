@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://7j0t4757lu3q"]
+
+[ext_resource type="Script" uid="uid://c07vre428nllu" path="res://Scenes/CameraButtonInterpretor.cs" id="1_rptf2"]
+
+[node name="CameraButtonInterpretor" type="CanvasLayer" unique_id=2123783191]
+follow_viewport_enabled = true
+script = ExtResource("1_rptf2")
+
+[node name="Button" type="Button" parent="." unique_id=1532392564]
+offset_left = 3457.0
+offset_top = 1598.0
+offset_right = 3557.0
+offset_bottom = 1698.0
+
+[node name="Button2" type="Button" parent="." unique_id=545338422]
+offset_left = 3457.0
+offset_top = 1791.0
+offset_right = 3557.0
+offset_bottom = 1891.0
+
+[node name="Button3" type="Button" parent="." unique_id=1364248208]
+offset_left = 3662.0
+offset_top = 1791.0
+offset_right = 3762.0
+offset_bottom = 1891.0
+
+[node name="Button4" type="Button" parent="." unique_id=130241441]
+offset_left = 3662.0
+offset_top = 1598.0
+offset_right = 3762.0
+offset_bottom = 1698.0
+
+[node name="Button5" type="Button" parent="." unique_id=714712084]
+offset_left = 3457.0
+offset_top = 1989.0
+offset_right = 3557.0
+offset_bottom = 2089.0
+
+[connection signal="pressed" from="Button" to="." method="SwitchToRoom" binds= [0]]
+[connection signal="pressed" from="Button2" to="." method="SwitchToRoom" binds= [1]]
+[connection signal="pressed" from="Button3" to="." method="SwitchToRoom" binds= [2]]
+[connection signal="pressed" from="Button4" to="." method="SwitchToRoom" binds= [3]]
+[connection signal="pressed" from="Button5" to="." method="SwitchToRoom" binds= [4]]

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://d1uwth6507u4o"]
+
+[ext_resource type="Script" uid="uid://l5vj3br27o6f" path="res://Scenes/RoomParent.cs" id="1_tgo0a"]
+
+[node name="RoomParent" type="Node2D" unique_id=1940295867]
+script = ExtResource("1_tgo0a")
+
+[node name="RoomCam" type="Camera2D" parent="." unique_id=1556308808]

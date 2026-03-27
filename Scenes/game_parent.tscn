@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://db06djeepw3pc"]
+
+[ext_resource type="Script" uid="uid://30hvfka1fw8o" path="res://Scenes/GameParent.cs" id="1_wibs0"]
+[ext_resource type="PackedScene" uid="uid://d1uwth6507u4o" path="res://Scenes/room_parent.tscn" id="2_vv7pn"]
+[ext_resource type="PackedScene" uid="uid://7j0t4757lu3q" path="res://Scenes/camera_button_interpretor.tscn" id="4_m2tcf"]
+[ext_resource type="PackedScene" uid="uid://tyj82u878flf" path="res://Scenes/survivor.tscn" id="4_ocuvh"]
+
+[node name="GameParent" type="Node2D" unique_id=1893232173 node_paths=PackedStringArray("Rooms", "Characters")]
+script = ExtResource("1_wibs0")
+Rooms = [NodePath("RoomParent"), NodePath("RoomParent2"), NodePath("RoomParent3"), NodePath("RoomParent4"), NodePath("RoomParent5")]
+Characters = [NodePath("Survivor"), NodePath("Survivor2"), NodePath("Survivor3")]
+
+[node name="RoomParent" parent="." unique_id=1940295867 instance=ExtResource("2_vv7pn")]
+position = Vector2(898, -535)
+
+[node name="RoomCam" parent="RoomParent" index="0" unique_id=1556308808]
+enabled = false
+
+[node name="RoomParent2" parent="." unique_id=1115957871 instance=ExtResource("2_vv7pn")]
+position = Vector2(-1766, -848)
+
+[node name="RoomCam" parent="RoomParent2" index="0" unique_id=1556308808]
+enabled = false
+
+[node name="RoomParent3" parent="." unique_id=901593817 instance=ExtResource("2_vv7pn")]
+position = Vector2(-326, 1181)
+
+[node name="RoomCam" parent="RoomParent3" index="0" unique_id=1556308808]
+enabled = false
+
+[node name="RoomParent4" parent="." unique_id=637940623 instance=ExtResource("2_vv7pn")]
+position = Vector2(0, -455)
+
+[node name="RoomCam" parent="RoomParent4" index="0" unique_id=1556308808]
+enabled = false
+
+[node name="RoomParent5" parent="." unique_id=938567276 instance=ExtResource("2_vv7pn")]
+
+[node name="RoomCam" parent="RoomParent5" index="0" unique_id=1556308808]
+enabled = false
+
+[node name="Survivor" parent="." unique_id=2008337856 instance=ExtResource("4_ocuvh")]
+position = Vector2(127, 126)
+
+[node name="Survivor2" parent="." unique_id=913638277 instance=ExtResource("4_ocuvh")]
+position = Vector2(223, 126)
+
+[node name="Survivor3" parent="." unique_id=1187676313 instance=ExtResource("4_ocuvh")]
+position = Vector2(405, 120)
+
+[node name="CameraButtonInterpretor" parent="." unique_id=665185489 instance=ExtResource("4_m2tcf")]
+follow_viewport_enabled = false
+
+[editable path="RoomParent"]
+[editable path="RoomParent2"]
+[editable path="RoomParent3"]
+[editable path="RoomParent4"]
+[editable path="RoomParent5"]
