@@ -15,6 +15,8 @@ type place : location;
 type task : location;
 
 property alive(character : character) : boolean;
+property hope(survivor : survivor) : number;
+property hope(traitor : traitor) : number;
 property at(character : character) : place;
 property suspect(character : character) : boolean;
 property completed(doer : character, task : task) : boolean;
@@ -46,7 +48,7 @@ at(Sur2) = Room3;
 path(Room1, Room3);
 path(Room2, Room3);
 path(Room4, Room2);
-believes(Tra1, at(Sur1) = Room1);
+believes(Tra1, at(Sur1) = Room3);
 believes(Sur1, !alive(Sur2));
 
 
@@ -89,20 +91,46 @@ trigger see_at(character : character, other : character, place : place) {
   believes(character, at(other) = place);
 };
 
-//trigger see_alive(character : character, other : character, place : place) {
+trigger see_alive(character : character, other : character, place : place) {
+  precondition:
+    alive(character) &
+    at(character) == place &
+    at(other) == place &
+    alive(other) &
+    believes(character, !alive(other));
+  effect:
+    believes(character, alive(other));
+};
+
+trigger see_dead(character : character, other : character, place : place) {
+  precondition:
+    alive(character) &
+    at(character) == place &
+    at(other) == place &
+    !alive(other) &
+    believes(character, alive(other));
+  effect:
+    believes(character, !alive(other));
+};  
+
+trigger set_surv_hope(survivor : survivor) {
+  precondition:
+    hope(survivor) != sum(a : survivor) (alive(a));
+  effect:
+    hope(survivor) = sum(a : survivor) (alive(a));
+};
+
+//trigger set_trat_hope(traitor : traitor) {
 //  precondition:
-//    at(character) == place &
-//    at(other) == place &
-//    believes(character, !alive(other));
-//  effect:
-//    believes(character, alive(other));
+//    hope()
 //};
 
 
 //UTILITY FUNCTIONS
 //Author 
 utility(): 
- at(Sur1) == Room2 & !alive(Sur1);
+ hope(Sur1);
+
 
 utility(Sur1): 
  if(!alive(Sur1)) 
@@ -112,5 +140,13 @@ utility(Sur1):
  else
   0;
 
+utility(Sur2):
+  if(!alive(Sur2))
+   0
+  elseif(at(Sur2) == at(Sur1))
+   1
+  else
+   0;
+
 utility(Tra1):
-  !alive(Sur1);
+  8 - (alive(Sur1)) - (alive(Sur2));
