@@ -35,6 +35,7 @@ position = Vector2(0, -455)
 enabled = false
 
 [node name="RoomParent5" parent="." unique_id=938567276 instance=ExtResource("2_vv7pn")]
+position = Vector2(-869, 131)
 
 [node name="RoomCam" parent="RoomParent5" index="0" unique_id=1556308808]
 enabled = false

@@ -69,12 +69,12 @@ action travel(character : character, from : place, to : place) {
 
 action kill(traitor : traitor, survivor : survivor, place : place) {
   precondition:
-    at(traitor) == place &
-    at(survivor) == place &
-    alive(traitor) & alive(survivor);
+	at(traitor) == place &
+	at(survivor) == place &
+	alive(traitor) & alive(survivor);
   effect:
-    !alive(survivor) &
-    bad(traitor);
+	!alive(survivor) &
+	bad(traitor);
   consenting: traitor;
   observing(c : character): alive(c) & at(c) == place;
 };

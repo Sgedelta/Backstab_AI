@@ -7,7 +7,8 @@ public partial class GameManager : Node
     public static GameManager Instance;
     public Dictionary<string, Callable> CommandDict = new Dictionary<string, Callable>()
     {
-        {"travel", Callable.From<Array<Variant>>((args) => { ((Survivor)args[0]).Travel((Vector2)args[2]); }) }
+        {"travel", Callable.From<Array<Variant>>((args) => { ((Survivor)args[0]).Travel((RoomParent)args[2]); }) },
+        {"kill", Callable.From<Array<Variant>>((args) => {((Survivor)args[0]).SetGoal(CurrentAction.travel, args[2]); }) }
     };
     public Dictionary<string, Variant> ArgumentDict = new Dictionary<string, Variant>()
     {
@@ -17,7 +18,7 @@ public partial class GameManager : Node
         {"Room2" , new Vector2(10, 5)},
         {"Room3" , new Vector2(-50, 100)}
     };
-
+    //Do we just update this a bunch and then name the objects the same as in Saber?
     public GameParent ActiveGameParent;
 
 
@@ -34,18 +35,36 @@ public partial class GameManager : Node
             GD.PrintErr($"[GM] Two GameManagers Created! Deleting self. (from {Name})");
             QueueFree();
         }
-
     }
 
 
     public void SetupGameData()
     {
-        ArgumentDict["Sur1"] = Instance;
+        if (GameParent.Instance.Characters == null || GameParent.Instance.Characters.Count == 0)
+        {
+            GD.PushError("FUCK (we ain't got no survivors champ)");
+            //return;
+        }
+        if (GameParent.Instance.Rooms == null || GameParent.Instance.Rooms.Count == 0)
+        {
+            GD.PushError("No rooms to compile");
+            //return;
+        }
+        ArgumentDict["Sur1"] = GameParent.Instance.Characters[0];
+        
     }
 
     public void SetupSurvivorData(Array<Survivor> Characters)
     {
-        //add all survivors to ArgumentDict here
+        //add all survivors and rooms to ArgumentDict here
+        //for (int i = 1; i < GameParent.Instance.Characters.Count + 1; i++)
+        //{
+        //    ArgumentDict.Add($"Sur{i}", GameParent.Instance.Characters[i - 1]);
+        //}
+        //for (int i = 1; i < GameParent.Instance.Rooms.Count + 1; i++)
+        //{
+        //    ArgumentDict.Add($"Room{i}", GameParent.Instance.Rooms[i - 1]);
+        //}
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

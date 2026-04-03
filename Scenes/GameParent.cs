@@ -9,9 +9,11 @@ public partial class GameParent : Node2D
 
 	[Export] public Array<Survivor> Characters = new Array<Survivor>();
 
+	public static GameParent Instance { get; private set; }
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		if (Instance == null) Instance = this;
 		GameManager.Instance.ActiveGameParent = this;
 		GameManager.Instance.SetupSurvivorData(Characters);
 		SetActiveCameraToKey(0);
