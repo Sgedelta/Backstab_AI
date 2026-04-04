@@ -71,12 +71,12 @@ action travel(character : character, from : place, to : place) {
 
 action kill(traitor : traitor, survivor : survivor, place : place) {
   precondition:
-    at(traitor) == place &
-    at(survivor) == place &
-    alive(traitor) & alive(survivor);
+	at(traitor) == place &
+	at(survivor) == place &
+	alive(traitor) & alive(survivor);
   effect:
-    !alive(survivor) &
-    bad(traitor);
+	!alive(survivor) &
+	bad(traitor);
   consenting: traitor;
   observing(c : character): alive(c) & at(c) == place;
 };
@@ -84,6 +84,7 @@ action kill(traitor : traitor, survivor : survivor, place : place) {
 //TRIGGERS
 trigger see_at(character : character, other : character, place : place) {
  precondition:
+  alive(character) &
   at(character) == place &
   at(other) == place &
   believes(character, at(other) != place);
@@ -91,45 +92,46 @@ trigger see_at(character : character, other : character, place : place) {
   believes(character, at(other) = place);
 };
 
-trigger see_alive(character : character, other : character, place : place) {
+trigger see_not_at(character : character, other : character, place : place) {
   precondition:
     alive(character) &
     at(character) == place &
-    at(other) == place &
-    alive(other) &
-    believes(character, !alive(other));
+    at (other) != place &
+    believes(character, at(other) == place);
   effect:
-    believes(character, alive(other));
+    believes(character, at(other) = ?);
 };
 
-trigger see_dead(character : character, other : character, place : place) {
+trigger see_alive(character : character, other : character) {
   precondition:
-    alive(character) &
-    at(character) == place &
-    at(other) == place &
-    !alive(other) &
-    believes(character, alive(other));
+	alive(character) &
+	at(character) == at(other) &
+	alive(other) &
+	believes(character, !alive(other));
   effect:
-    believes(character, !alive(other));
+	believes(character, alive(other));
+};
+
+trigger see_dead(character : character, other : character) {
+  precondition:
+	alive(character) &
+	at(character) == at(other) &
+	!alive(other) &
+	believes(character, alive(other));
+  effect:
+	believes(character, !alive(other));
 };  
 
-trigger set_surv_hope(survivor : survivor) {
-  precondition:
-    hope(survivor) != sum(a : survivor) (alive(a));
-  effect:
-    hope(survivor) = sum(a : survivor) (alive(a));
-};
-
-//trigger set_trat_hope(traitor : traitor) {
-//  precondition:
-//    hope()
-//};
 
 
 //UTILITY FUNCTIONS
 //Author 
 utility(): 
- hope(Sur1);
+ if(!alive(Sur1)) 
+  1
+  else 
+  0;
+ // sum(s : survivor) (if(!alive(s)) 1 else 0);
 
 
 utility(Sur1): 
@@ -149,4 +151,5 @@ utility(Sur2):
    0;
 
 utility(Tra1):
-  8 - (alive(Sur1)) - (alive(Sur2));
+  7 - (if(alive(Sur1)) 1 else 0) - (if(alive(Sur2)) 1 else 0) - (if(alive(Sur3)) 1 else 0) - (if(alive(Sur4)) 1 else 0) - (if(alive(Sur5)) 1 else 0) - (if(alive(Sur6)) 1 else 0) - (if(alive(Sur7)) 1 else 0);
+  //(sum(s : survivor) (1)) - (sum(s : survivor) (if(!alive(s)) 1 else 0));
