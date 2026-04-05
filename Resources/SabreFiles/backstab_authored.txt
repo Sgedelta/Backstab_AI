@@ -18,6 +18,7 @@ property alive(character : character) : boolean;
 property hope(survivor : survivor) : number;
 property hope(traitor : traitor) : number;
 property at(character : character) : place;
+property at(task : task) : place;
 property suspect(character : character) : boolean;
 property completed(doer : character, task : task) : boolean;
 property path(from : place, to : place) : boolean;
@@ -27,27 +28,70 @@ entity Sur1 : survivor;
 entity Sur2 : survivor;
 entity Sur3 : survivor;
 entity Sur4 : survivor;
-entity Sur5 : survivor;
-entity Sur6 : survivor;
-entity Sur7 : survivor;
+//entity Sur5 : survivor;
+//entity Sur6 : survivor;
+//entity Sur7 : survivor;
 entity Tra1 : traitor;
 
 entity Room1 : place;
 entity Room2 : place;
 entity Room3 : place;
 entity Room4 : place;
+entity Room5 : place;
+entity Room6 : place;
+
+entity ScanCard : task;
+entity FixEngine : task;
+entity ChargeShield : task;
 
 //INITIAL INFORMATION
 
 alive(Sur1);
 alive(Tra1);
 alive(Sur2);
-at(Tra1) = Room4;
+alive(Sur3);
+alive(Sur4);
+
+at(Tra1) = Room1;
 at(Sur1) = Room1;
-at(Sur2) = Room3;
+at(Sur2) = Room1;
+at(Sur3) = Room1;
+at(Sur4) = Room1;
+
+!completed(Sur1, ScanCard);
+!completed(Sur2, ScanCard);
+!completed(Sur3, ScanCard);
+!completed(Sur4, ScanCard);
+!completed(Sur1, FixEngine);
+!completed(Sur2, FixEngine);
+!completed(Sur3, FixEngine);
+!completed(Sur4, FixEngine);
+!completed(Sur1, ChargeShield);
+!completed(Sur2, ChargeShield);
+!completed(Sur3, ChargeShield);
+!completed(Sur4, ChargeShield);
+
+at(ScanCard) = Room2;
+at(FixEngine) = Room4;
+at(ChargeShield) = Room6;
+
+// TEST MAP
+//   
+//     |- Room1 -|
+//  Room2      Room3 - Room4
+//     |                 |
+//  Room5  -  -  -  -  Room6
+//
+//
+path(Room1, Room2);
 path(Room1, Room3);
-path(Room2, Room3);
-path(Room4, Room2);
+path(Room2, Room5);
+path(Room3, Room4);
+path(Room4, Room6);
+path(Room5, Room6);
+
+//INITIAL BELIEFS 
+
 believes(Tra1, at(Sur1) = Room3);
 believes(Sur1, !alive(Sur2));
 
@@ -81,6 +125,17 @@ action kill(traitor : traitor, survivor : survivor, place : place) {
   observing(c : character): alive(c) & at(c) == place;
 };
 
+action complete(survivor : survivor, task : task) {
+  precondition:
+   alive(survivor) &
+   !completed(survivor, task) &
+   at(survivor) == at(task);
+  effect:
+    completed(survivor, task);
+  consenting: survivor;
+  observing(c: character): alive(c) & at(c) == at(survivor);
+};
+
 //TRIGGERS
 trigger see_at(character : character, other : character, place : place) {
  precondition:
@@ -101,6 +156,15 @@ trigger see_not_at(character : character, other : character, place : place) {
   effect:
     believes(character, at(other) = ?);
 };
+
+//trigger see_alone_with_corpse(seer : character, other : character, corpse : character) {
+//  precondition:
+//   alive(seer) & alive(other) & !alive(corpse) &
+//   (sum(o : character) (if(alive(o) & at(o) == at(corpse)) 1 else 0) <= 2)
+//   & !believes(seer, bad(other));
+//  effect:
+//    believes(seer, bad(other)); 
+//};
 
 trigger see_alive(character : character, other : character) {
   precondition:
@@ -127,29 +191,38 @@ trigger see_dead(character : character, other : character) {
 //UTILITY FUNCTIONS
 //Author 
 utility(): 
- if(!alive(Sur1)) 
-  1
-  else 
-  0;
- // sum(s : survivor) (if(!alive(s)) 1 else 0);
+ (sum(s : survivor) (
+    if(!alive(s)) 
+      2
+    elseif(believes(s, bad(Tra1)))
+      1
+    else 
+      0
+    )
+  );
 
 
 utility(Sur1): 
- if(!alive(Sur1)) 
-  0
- elseif(at(Sur1) == Room2)
-  1
- else
-  0;
+  //if(exists(c : character) (at(c) == at(Sur1) & believes(Sur1, bad(c)))) 
+  //  0
+  //else 
+    (sum(s : survivor) (if(alive(s)) 1 else 0)) + (sum(t : task) (if(completed(Sur1, t)) 1 else 0));
 
 utility(Sur2):
-  if(!alive(Sur2))
-   0
-  elseif(at(Sur2) == at(Sur1))
-   1
-  else
-   0;
+  (sum(s : survivor) (if(alive(s)) 1 else 0)) + (sum(t : task) (if(completed(Sur2, t)) 1 else 0));
 
 utility(Tra1):
-  7 - (if(alive(Sur1)) 1 else 0) - (if(alive(Sur2)) 1 else 0) - (if(alive(Sur3)) 1 else 0) - (if(alive(Sur4)) 1 else 0) - (if(alive(Sur5)) 1 else 0) - (if(alive(Sur6)) 1 else 0) - (if(alive(Sur7)) 1 else 0);
+  20 - 
+  (sum(s : survivor) (
+    if(alive(s)) 
+      2
+    elseif(believes(s, bad(Tra1)))
+      1
+    else 
+      0
+    )
+  );
+  
+  
+  // - (sum(s : survivor) (sum(t : task) (if(completed(s, t)) 1 else 0)));
   //(sum(s : survivor) (1)) - (sum(s : survivor) (if(!alive(s)) 1 else 0));
