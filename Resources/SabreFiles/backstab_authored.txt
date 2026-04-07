@@ -15,14 +15,13 @@ type place : location;
 type task : location;
 
 property alive(character : character) : boolean;
-property hope(survivor : survivor) : number;
-property hope(traitor : traitor) : number;
 property at(character : character) : place;
 property at(task : task) : place;
 property suspect(character : character) : boolean;
 property completed(doer : character, task : task) : boolean;
 property path(from : place, to : place) : boolean;
 property bad(character : character) : boolean;
+property safe(survivor : survivor) : boolean;
 
 entity Sur1 : survivor;
 entity Sur2 : survivor;
@@ -47,10 +46,15 @@ entity ChargeShield : task;
 //INITIAL INFORMATION
 
 alive(Sur1);
-alive(Tra1);
 alive(Sur2);
 alive(Sur3);
 alive(Sur4);
+alive(Tra1);
+
+safe(Sur1);
+safe(Sur2);
+safe(Sur3);
+safe(Sur4);
 
 at(Tra1) = Room1;
 at(Sur1) = Room1;
@@ -166,6 +170,22 @@ trigger see_not_at(character : character, other : character, place : place) {
 //    believes(seer, bad(other)); 
 //};
 
+
+
+trigger see_unsafe(survivor : survivor) {
+  precondition:
+    alive(survivor) & safe(survivor) & (exists(o : character) (alive(o) & at(o) == at(survivor) & believes(survivor, bad(o))));
+  effect:
+    !safe(survivor);
+};
+
+trigger see_safe(survivor : survivor, other : character) {
+  precondition:
+    alive(survivor) & !safe(survivor) & !(exists(o : character) (alive(o) & at(o) == at(survivor) & believes(survivor, bad(o))));
+  effect:
+    safe(survivor);
+};
+
 trigger see_alive(character : character, other : character) {
   precondition:
 	alive(character) &
@@ -191,25 +211,46 @@ trigger see_dead(character : character, other : character) {
 //UTILITY FUNCTIONS
 //Author 
 utility(): 
- (sum(s : survivor) (
-    if(!alive(s)) 
-      2
-    elseif(believes(s, bad(Tra1)))
-      1
-    else 
-      0
-    )
-  );
+  if(!alive(Sur1) & !alive(Sur2) & alive(Sur3) & alive(Sur4) & safe(Sur3) & !safe(Sur4))
+   1
+  else
+  0;
+
+
+// (sum(s : survivor) (
+//    if(!alive(s)) 
+//      2
+//    elseif(believes(s, bad(Tra1)))
+//      1
+//    else 
+//      0
+//    )
+//  );
 
 
 utility(Sur1): 
-  //if(exists(c : character) (at(c) == at(Sur1) & believes(Sur1, bad(c)))) 
-  //  0
-  //else 
+  if(!alive(Sur1) | !safe(Sur1)) 
+    0
+  else 
     (sum(s : survivor) (if(alive(s)) 1 else 0)) + (sum(t : task) (if(completed(Sur1, t)) 1 else 0));
 
-utility(Sur2):
-  (sum(s : survivor) (if(alive(s)) 1 else 0)) + (sum(t : task) (if(completed(Sur2, t)) 1 else 0));
+utility(Sur2): 
+  if(!alive(Sur2) | !safe(Sur2)) 
+    0
+  else 
+    (sum(s : survivor) (if(alive(s)) 1 else 0)) + (sum(t : task) (if(completed(Sur2, t)) 1 else 0));
+
+  utility(Sur3): 
+  if(!alive(Sur3) | !safe(Sur3)) 
+    0
+  else 
+    (sum(s : survivor) (if(alive(s)) 1 else 0)) + (sum(t : task) (if(completed(Sur3, t)) 1 else 0));
+
+  utility(Sur4): 
+  if(!alive(Sur4) | !safe(Sur4)) 
+    0
+  else 
+    (sum(s : survivor) (if(alive(s)) 1 else 0)) + (sum(t : task) (if(completed(Sur4, t)) 1 else 0));
 
 utility(Tra1):
   20 - 
