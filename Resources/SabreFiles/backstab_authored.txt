@@ -22,6 +22,7 @@ property completed(doer : character, task : task) : boolean;
 property path(from : place, to : place) : boolean;
 property bad(character : character) : boolean;
 property safe(survivor : survivor) : boolean;
+property lit(place : place) : boolean;
 
 entity Sur1 : survivor;
 entity Sur2 : survivor;
@@ -96,8 +97,7 @@ path(Room5, Room6);
 
 //INITIAL BELIEFS 
 
-believes(Tra1, at(Sur1) = Room3);
-believes(Sur1, !alive(Sur2));
+believes(Sur3, at(ScanCard) = Room6);
 
 
 
@@ -140,6 +140,9 @@ action complete(survivor : survivor, task : task) {
   observing(c: character): alive(c) & at(c) == at(survivor);
 };
 
+//TODO!!
+//action darken(traitor : traitor, )
+
 //TRIGGERS
 trigger see_at(character : character, other : character, place : place) {
  precondition:
@@ -151,7 +154,27 @@ trigger see_at(character : character, other : character, place : place) {
   believes(character, at(other) = place);
 };
 
-trigger see_not_at(character : character, other : character, place : place) {
+trigger see_not_at(character : character, other : task, place : place) {
+  precondition:
+    alive(character) &
+    at(character) == place &
+    at (other) != place &
+    believes(character, at(other) == place);
+  effect:
+    believes(character, at(other) = ?);
+};
+
+trigger see_task_at(character : character, other : task, place : place) {
+ precondition:
+  alive(character) &
+  at(character) == place &
+  at(other) == place &
+  believes(character, at(other) != place);
+ effect:
+  believes(character, at(other) = place);
+};
+
+trigger see_task_not_at(character : character, other : character, place : place) {
   precondition:
     alive(character) &
     at(character) == place &
@@ -163,11 +186,13 @@ trigger see_not_at(character : character, other : character, place : place) {
 
 //trigger see_alone_with_corpse(seer : character, other : character, corpse : character) {
 //  precondition:
-//   alive(seer) & alive(other) & !alive(corpse) &
-//   (sum(o : character) (if(alive(o) & at(o) == at(corpse)) 1 else 0) <= 2)
-//   & !believes(seer, bad(other));
+//    alive(seer) & alive(other) & !alive(corpse) &
+//    at(seer) == at(other) & at(other) == at(corpse)
+//    & !(exists(c : character) (c != seer & c != other & c != corpse & alive(c) & at(c) == at(seer)))
+//  ;
 //  effect:
-//    believes(seer, bad(other)); 
+//    believes(seer, bad(other))
+//  ;
 //};
 
 
@@ -211,10 +236,14 @@ trigger see_dead(character : character, other : character) {
 //UTILITY FUNCTIONS
 //Author 
 utility(): 
-  if(!alive(Sur1) & !alive(Sur2) & alive(Sur3) & alive(Sur4) & safe(Sur3) & !safe(Sur4))
+  if(alive(Sur1) & believes(Sur1, !bad(Tra1)) & !alive(Sur2) & safe(Sur3))
    1
   else
-  0;
+   0;
+  //if(!alive(Sur1) & !alive(Sur2) & alive(Sur3) & alive(Sur4) & safe(Sur3) & !safe(Sur4))
+  // 1
+  //else
+  //0;
 
 
 // (sum(s : survivor) (
