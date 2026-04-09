@@ -3,12 +3,20 @@
 [ext_resource type="Script" uid="uid://30hvfka1fw8o" path="res://Scenes/GameParent.cs" id="1_wibs0"]
 [ext_resource type="PackedScene" uid="uid://d1uwth6507u4o" path="res://Scenes/room_parent.tscn" id="2_vv7pn"]
 [ext_resource type="PackedScene" uid="uid://7j0t4757lu3q" path="res://Scenes/camera_button_interpretor.tscn" id="4_m2tcf"]
-[ext_resource type="PackedScene" uid="uid://tyj82u878flf" path="res://Scenes/survivor.tscn" id="4_ocuvh"]
+[ext_resource type="PackedScene" uid="uid://do1ovsvynyfk1" path="res://Scenes/Testing/character.tscn" id="4_ocuvh"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_vv7pn"]
+vertices = PackedVector2Array(2924.4766, -1843.3906, 2963.4922, 2099.8516, -3723.6563, 2080.1406, -3697.3281, -1896.5938)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-3747, -1947, -3774, 2130, 3014, 2150, 2974, -1893)])
+source_geometry_mode = 2
+border_size = 20.0
+agent_radius = 50.0
 
 [node name="GameParent" type="Node2D" unique_id=1893232173 node_paths=PackedStringArray("Rooms", "Characters")]
 script = ExtResource("1_wibs0")
 Rooms = [NodePath("RoomParent"), NodePath("RoomParent2"), NodePath("RoomParent3"), NodePath("RoomParent4"), NodePath("RoomParent5")]
-Characters = [NodePath("Survivor"), NodePath("Survivor2"), NodePath("Survivor3")]
+Characters = [NodePath("Character"), NodePath("Character2"), NodePath("Character3")]
 
 [node name="RoomParent" parent="." unique_id=1940295867 instance=ExtResource("2_vv7pn")]
 position = Vector2(898, -535)
@@ -40,17 +48,23 @@ position = Vector2(-869, 131)
 [node name="RoomCam" parent="RoomParent5" index="0" unique_id=1556308808]
 enabled = false
 
-[node name="Survivor" parent="." unique_id=2008337856 instance=ExtResource("4_ocuvh")]
-position = Vector2(127, 126)
-
-[node name="Survivor2" parent="." unique_id=913638277 instance=ExtResource("4_ocuvh")]
-position = Vector2(223, 126)
-
-[node name="Survivor3" parent="." unique_id=1187676313 instance=ExtResource("4_ocuvh")]
-position = Vector2(405, 120)
-
 [node name="CameraButtonInterpretor" parent="." unique_id=665185489 instance=ExtResource("4_m2tcf")]
 follow_viewport_enabled = false
+
+[node name="NavRegion" type="NavigationRegion2D" parent="." unique_id=1633526985]
+navigation_polygon = SubResource("NavigationPolygon_vv7pn")
+
+[node name="Character" parent="." unique_id=334613571 node_paths=PackedStringArray("currentRoom") instance=ExtResource("4_ocuvh")]
+position = Vector2(942, -425)
+currentRoom = NodePath("../RoomParent")
+
+[node name="Character2" parent="." unique_id=1005153462 node_paths=PackedStringArray("currentRoom") instance=ExtResource("4_ocuvh")]
+position = Vector2(1044, -619)
+currentRoom = NodePath("../RoomParent")
+
+[node name="Character3" parent="." unique_id=1936622748 node_paths=PackedStringArray("currentRoom") instance=ExtResource("4_ocuvh")]
+position = Vector2(790, -627)
+currentRoom = NodePath("../RoomParent")
 
 [editable path="RoomParent"]
 [editable path="RoomParent2"]

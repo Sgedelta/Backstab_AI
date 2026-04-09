@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bhpuuw7vsrwg6"]
 
 [ext_resource type="Texture2D" uid="uid://d0dnuhvflycrl" path="res://icon.svg" id="1_gane7"]
-[ext_resource type="Script" uid="uid://pmxnkvpyaixq" path="res://Scenes/Testing/CharacterController.cs" id="1_u4fsv"]
+[ext_resource type="PackedScene" uid="uid://do1ovsvynyfk1" path="res://Scenes/Testing/character.tscn" id="1_u4fsv"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_6wcme"]
 vertices = PackedVector2Array(1838.1797, -791, 1881.7734, 1029.7969, -14.1171875, -218.02344, -116.203125, -298.53125, -323.79688, 174.53125, -1761.7578, 1016.1797, -1753.2266, -791, -425.8828, 94.02344)
@@ -10,9 +10,6 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-1803, -841, -1812, 106
 source_geometry_mode = 2
 border_size = 20.0
 agent_radius = 50.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_6wcme"]
-radius = 70.21396
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u4fsv"]
 size = Vector2(400, 30)
@@ -23,19 +20,8 @@ size = Vector2(400, 30)
 position = Vector2(1889, 931)
 navigation_polygon = SubResource("NavigationPolygon_6wcme")
 
-[node name="Character" type="CharacterBody2D" parent="." unique_id=626315186]
+[node name="Character" parent="." unique_id=334613571 instance=ExtResource("1_u4fsv")]
 position = Vector2(1874, 931)
-motion_mode = 1
-script = ExtResource("1_u4fsv")
-_targetPos = Vector2(768, 485)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Character" unique_id=1729461411]
-shape = SubResource("CircleShape2D_6wcme")
-
-[node name="Sprite2D" type="Sprite2D" parent="Character" unique_id=481406991]
-texture = ExtResource("1_gane7")
-
-[node name="CharacterNavAgent" type="NavigationAgent2D" parent="Character" unique_id=2066118823]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1763065001 groups=["navigation_polygon_source_geometry_group"]]
 position = Vector2(1669, 869)

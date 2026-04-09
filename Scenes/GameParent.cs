@@ -7,7 +7,7 @@ public partial class GameParent : Node2D
 	[Export]
 	public Array<RoomParent> Rooms = new Array<RoomParent>();
 
-	[Export] public Array<Survivor> Characters = new Array<Survivor>();
+	[Export] public Array<CharacterController> Characters = new Array<CharacterController>();
 
 	public static GameParent Instance { get; private set; }
 	// Called when the node enters the scene tree for the first time.
@@ -27,11 +27,11 @@ public partial class GameParent : Node2D
 	public void SetActiveCameraToKey(int key)
 	{
 		Rooms[key].RoomCam.Enabled = true;
-        Rooms[key].RoomCam.MakeCurrent();
+		Rooms[key].RoomCam.MakeCurrent();
 
 		//Control UI = GetNode<Control>("CameraButtonInterpretor");
 		//UI.GlobalPosition = Rooms[key].RoomCam.GlobalPosition;
 		//UI.Scale = Rooms[key].RoomCam.Zoom;
-    }
+	}
 
 }

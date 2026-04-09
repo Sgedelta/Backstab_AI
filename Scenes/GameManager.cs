@@ -54,7 +54,7 @@ public partial class GameManager : Node
         
     }
 
-    public void SetupSurvivorData(Array<Survivor> Characters)
+    public void SetupSurvivorData(Array<CharacterController> Characters)
     {
         //add all survivors and rooms to ArgumentDict here
         //for (int i = 1; i < GameParent.Instance.Characters.Count + 1; i++)

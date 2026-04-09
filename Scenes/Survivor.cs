@@ -1,11 +1,11 @@
 using Godot;
 using System;
 
-public enum CurrentAction
-{
-    travel,
-    kill
-}
+//public enum CurrentAction
+//{
+//    travel,
+//    kill
+//}
 
 public partial class Survivor : Node2D
 {

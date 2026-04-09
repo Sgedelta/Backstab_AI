@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://tyj82u878flf"]
 
-[ext_resource type="Script" uid="uid://npsff4bjerju" path="res://Survivor.cs" id="1_46oef"]
+[ext_resource type="Script" uid="uid://npsff4bjerju" path="res://Scenes/Survivor.cs" id="1_46oef"]
 [ext_resource type="Texture2D" uid="uid://d0dnuhvflycrl" path="res://icon.svg" id="2_lf7c2"]
 
 [node name="Survivor" type="Node2D" unique_id=2008337856]
