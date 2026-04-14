@@ -33,5 +33,16 @@ public partial class GameParent : Node2D
 		//UI.GlobalPosition = Rooms[key].RoomCam.GlobalPosition;
 		//UI.Scale = Rooms[key].RoomCam.Zoom;
 	}
-
+    public Array<CharacterController> GetSurInRoom(RoomParent room)
+    {
+        Array<CharacterController> inRoom = new Array<CharacterController>();
+        foreach (CharacterController sur in Characters)
+        {
+			if (sur.currentRoom == room && sur.currentRoom != null)
+			{
+				inRoom.Add(sur);
+			}
+        }
+		return inRoom;
+    }
 }

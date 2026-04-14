@@ -25,25 +25,25 @@ position = Vector2(898, -535)
 enabled = false
 
 [node name="RoomParent2" parent="." unique_id=1115957871 instance=ExtResource("2_vv7pn")]
-position = Vector2(-1766, -848)
+position = Vector2(2092, -531)
 
 [node name="RoomCam" parent="RoomParent2" index="0" unique_id=1556308808]
 enabled = false
 
 [node name="RoomParent3" parent="." unique_id=901593817 instance=ExtResource("2_vv7pn")]
-position = Vector2(-326, 1181)
+position = Vector2(895, 709)
 
 [node name="RoomCam" parent="RoomParent3" index="0" unique_id=1556308808]
 enabled = false
 
 [node name="RoomParent4" parent="." unique_id=637940623 instance=ExtResource("2_vv7pn")]
-position = Vector2(0, -455)
+position = Vector2(2100, 733)
 
 [node name="RoomCam" parent="RoomParent4" index="0" unique_id=1556308808]
 enabled = false
 
 [node name="RoomParent5" parent="." unique_id=938567276 instance=ExtResource("2_vv7pn")]
-position = Vector2(-869, 131)
+position = Vector2(906, 1857)
 
 [node name="RoomCam" parent="RoomParent5" index="0" unique_id=1556308808]
 enabled = false
@@ -56,15 +56,18 @@ navigation_polygon = SubResource("NavigationPolygon_vv7pn")
 
 [node name="Character" parent="." unique_id=334613571 node_paths=PackedStringArray("currentRoom") instance=ExtResource("4_ocuvh")]
 position = Vector2(942, -425)
+IsKiller = true
 currentRoom = NodePath("../RoomParent")
 
 [node name="Character2" parent="." unique_id=1005153462 node_paths=PackedStringArray("currentRoom") instance=ExtResource("4_ocuvh")]
-position = Vector2(1044, -619)
-currentRoom = NodePath("../RoomParent")
+position = Vector2(2175, -619)
+IsKiller = true
+currentRoom = NodePath("../RoomParent2")
 
 [node name="Character3" parent="." unique_id=1936622748 node_paths=PackedStringArray("currentRoom") instance=ExtResource("4_ocuvh")]
-position = Vector2(790, -627)
-currentRoom = NodePath("../RoomParent")
+position = Vector2(790, 659)
+IsKiller = true
+currentRoom = NodePath("../RoomParent3")
 
 [editable path="RoomParent"]
 [editable path="RoomParent2"]

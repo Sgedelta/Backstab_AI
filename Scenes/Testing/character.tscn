@@ -7,6 +7,7 @@
 radius = 70.21396
 
 [node name="Character" type="CharacterBody2D" unique_id=334613571]
+collision_layer = 0
 motion_mode = 1
 script = ExtResource("1_1nj1a")
 _targetPos = Vector2(768, 485)

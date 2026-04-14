@@ -13,22 +13,22 @@ offset_right = 3557.0
 offset_bottom = 1698.0
 
 [node name="Button2" type="Button" parent="." unique_id=545338422]
-offset_left = 3457.0
-offset_top = 1791.0
-offset_right = 3557.0
-offset_bottom = 1891.0
+offset_left = 3661.0
+offset_top = 1599.0
+offset_right = 3761.0
+offset_bottom = 1699.0
 
 [node name="Button3" type="Button" parent="." unique_id=1364248208]
-offset_left = 3662.0
-offset_top = 1791.0
-offset_right = 3762.0
-offset_bottom = 1891.0
+offset_left = 3456.0
+offset_top = 1798.0
+offset_right = 3556.0
+offset_bottom = 1898.0
 
 [node name="Button4" type="Button" parent="." unique_id=130241441]
 offset_left = 3662.0
-offset_top = 1598.0
+offset_top = 1800.0
 offset_right = 3762.0
-offset_bottom = 1698.0
+offset_bottom = 1900.0
 
 [node name="Button5" type="Button" parent="." unique_id=714712084]
 offset_left = 3457.0

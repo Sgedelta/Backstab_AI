@@ -15,7 +15,8 @@ public partial class CharacterController : CharacterBody2D
 
     private NavigationAgent2D _navAgent;
 
-    [Export] private RoomParent currentRoom;
+    [Export] public bool IsKiller = false;
+    [Export] public RoomParent currentRoom;
     private RoomParent travelToRoom;
     private CurrentAction currentAction;
     private Variant target;
@@ -48,13 +49,20 @@ public partial class CharacterController : CharacterBody2D
 
     public override void _PhysicsProcess(double delta)
     {
-        do
+        if (once)
         {
-            int toMove = rng.RandiRange(0, GameParent.Instance.Rooms.Count-1);
+            int toMove = rng.RandiRange(0, GameParent.Instance.Rooms.Count - 1);
             Travel(GameParent.Instance.Rooms[toMove]);
             once = false;
         }
-        while (once);
+
+        if (IsKiller)
+        {
+            if(GameParent.Instance.GetSurInRoom(currentRoom).Count == 2)
+            {
+                Kill();
+            }
+        }
 
         switch (currentAction)
         {
@@ -65,7 +73,7 @@ public partial class CharacterController : CharacterBody2D
                     return;
                 }
                 Vector2 nexPosWander = _navAgent.GetNextPathPosition();
-                Velocity = GlobalTransform.Origin.DirectionTo(nexPosWander) * _speed;
+                Velocity = GlobalTransform.Origin.DirectionTo(nexPosWander) * (_speed/100);
                 MoveAndSlide();
                 break;
             case CurrentAction.travel:
@@ -84,9 +92,6 @@ public partial class CharacterController : CharacterBody2D
             default:
                 break;
         }
-
-
-
     }
 
     public void Travel(RoomParent room)
@@ -95,19 +100,25 @@ public partial class CharacterController : CharacterBody2D
         //currentRoom = room;
         //GD.Print($"{SurvName} goes to {room}");
         //this.Position = room.Position;
+        GD.Print("travel called");
         TargetPos = room.Position;
+        currentRoom = null;
         currentAction = CurrentAction.travel;
         travelToRoom = room;
     }
     public void Wander()
     {
+        GD.Print("wander called");
         Vector2 moveToPos = new Vector2(rng.RandfRange(currentRoom.MinRoomBounds[0], currentRoom.MaxRoomBounds[0]), rng.RandfRange(currentRoom.MinRoomBounds[1], currentRoom.MaxRoomBounds[1]));
         //temp
-        Position = moveToPos;
+        //Position = moveToPos;
         TargetPos = moveToPos;
         //nav agent pathfind to moveToPos
     }
-
+    public void Kill()
+    {
+        GD.Print("kill called");
+    }
     public void SetGoal(CurrentAction action, Variant target)
     {
         currentAction = action;
